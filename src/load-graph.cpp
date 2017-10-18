@@ -79,7 +79,7 @@ void draw_background(LoadGraph *graph) {
     cr = cairo_create (surface);
 
     GtkStyleContext *context = gtk_widget_get_style_context (GTK_WIDGET (GsmApplication::get()->stack));
-    
+
     gtk_style_context_get_color (context, GTK_STATE_FLAG_NORMAL, &fg);
 
     cairo_paint_with_alpha (cr, 0.0);
@@ -93,14 +93,14 @@ void draw_background(LoadGraph *graph) {
     cairo_translate (cr, FRAME_WIDTH, FRAME_WIDTH);
 
     /* Draw background rectangle */
-    cairo_set_source_rgb (cr, 1.0, 1.0, 1.0);
+    cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);  // use black background
     cairo_rectangle (cr, graph->indent, 0,
                      graph->draw_width - graph->rmargin - graph->indent, graph->real_draw_height);
     cairo_fill(cr);
 
     cairo_set_line_width (cr, 1.0);
-    cairo_set_source_rgb (cr, 0.89, 0.89, 0.89);
-    
+    cairo_set_source_rgb (cr, 0.11, 0.11, 0.11);  // use black lines
+
     for (i = 0; i <= num_bars; ++i) {
         double y;
 
@@ -130,23 +130,23 @@ void draw_background(LoadGraph *graph) {
         g_free(caption);
 
         if (i==0 || i==num_bars)
-          cairo_set_source_rgb (cr, 0.70, 0.71, 0.70);
-        else 
-          cairo_set_source_rgb (cr, 0.89, 0.89, 0.89);
+          cairo_set_source_rgb (cr, 0.30, 0.29, 0.30);  // black lines
+        else
+          cairo_set_source_rgb (cr, 0.11, 0.11, 0.11);  // black lines
         cairo_move_to (cr, graph->indent, i * graph->graph_dely + 0.5);
         cairo_line_to (cr, graph->draw_width - graph->rmargin + 0.5 + 4, i * graph->graph_dely + 0.5);
         cairo_stroke (cr);
     }
-    
+
 
     const unsigned total_seconds = graph->speed * (LoadGraph::NUM_POINTS - 2) / 1000;
 
     for (unsigned int i = 0; i < 7; i++) {
         double x = (i) * (graph->draw_width - graph->rmargin - graph->indent) / 6;
         if (i==0 || i==6)
-          cairo_set_source_rgb (cr, 0.70, 0.71, 0.70);
-        else 
-          cairo_set_source_rgb (cr, 0.89, 0.89, 0.89);
+          cairo_set_source_rgb (cr, 0.30, 0.29, 0.30);  // black lines
+        else
+          cairo_set_source_rgb (cr, 0.11, 0.11, 0.11);  // black lines
 
         cairo_move_to (cr, (ceil(x) + 0.5) + graph->indent, 0.5);
         cairo_line_to (cr, (ceil(x) + 0.5) + graph->indent, graph->real_draw_height + 4.5);
@@ -406,9 +406,9 @@ get_memory (LoadGraph *graph)
     set_memory_label_and_picker(GTK_LABEL(graph->labels.swap),
                                 GSM_COLOR_BUTTON(graph->swap_color_picker),
                                 swap.used, swap.total, swappercent);
-    
+
     gtk_widget_set_sensitive (GTK_WIDGET (graph->swap_color_picker), swap.total > 0);
-    
+
     graph->data[0][0] = mempercent;
     graph->data[0][1] = swap.total>0 ? swappercent : -1.0f;
 }
